@@ -12,14 +12,22 @@ const argv = yargs.options({
   .alias('help', 'h')
   .argv;
 
-const geocode=require('./geocode/geocode')
+const geocode=require('./geocode/geocode');
+const weather=require('./weather/weather');
 
 geocode.geoCodeAddress(argv.a,(errorMessage,results)=>{
   if(errorMessage)
    { console.log(errorMessage);}
   else
     {
-      console.log(JSON.stringify(results,undefined,2));
+      console.log(results.address);
+      weather.getWeather(results.latitude,results.longitude,(err,results)=>{
+        if(err){
+          console.log(err);}
+          else{
+       console.log(`the current temperature is ${results.current},it feels like ${results.apparent}`);     
+          }
+      })
     }
 });
 
